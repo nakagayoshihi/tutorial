@@ -34,8 +34,6 @@
                 if($result = $mysqli->query($sql)) {
                     header("Location: main.php");
                     header("Set-Cookie: sessionid=".$sessionId);
-                } else {
-                    
                 }
             } else {
                 $error = $userName.' is invalid.<br>';
@@ -51,26 +49,51 @@
     <title>Login</title>
 </header>
 <body>
-    <div id="loginLabel">Login</div>
+    <h1 id="loginLabel">Login</h1>
     <div id="loginForm">
         <form action="/login.php" id="form1">
-            <label>Username</label>
-            <input type="text" id="username" name="username"><br>
-            <label>Password</label>
-            <input type="password" id="password" name="password"><br>
+            <label class="loginFormLabel">Username</label><br>
+            <input type="text" id="username" name="username" class="loginFormInput"><br>
+            <label class="loginFormLabel">Password</label><br>
+            <input type="password" id="password" name="password" class="loginFormInput"><br>
             <input type="submit" value="Login">
         </form>
-        <?=$error;?>
+        <div id="errorLabel" style="color: #e24848;"><?=$error;?></div>
     </div>
 </body>
 
 <style>
+    body {
+        font-family: monospace;
+    }
     #loginLabel {
-        color: blue;
+        color: #2c2c2c;
         text-align: center;
+        margin: 20px 0px 20px 0px;
     }
     #loginForm {
-        background-color: blue;
-        text-align: center;
+        background-color: #efeff3;
+        padding: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 300px;
+        border-style: solid;
+        border-color: #a1a1b3;
+        border-width: 1px;
+    }
+    .loginFormLabel {
+        position: relative;
+        left: 10px;
+    }
+    .loginFormInput {
+        position: relative;
+        left: 10px;
+        width: 280;
+        margin-bottom: 10px;
+    }
+    input[type="submit"] {
+        font-family: monospace;
+        margin: 30px 10px 10px 10px;
+        width: 280; 
     }
 </style>
