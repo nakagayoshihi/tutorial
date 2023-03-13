@@ -8,4 +8,5 @@ LEMPとはLinux、WebサーバとしてNginx、DBサーバとしてMySQL、サ�
 
 ## MariaDB
 
-
+## PHP
+Hypertext Preprocessorの略。サーバサイドで動作するスクリプト言語の一つ。

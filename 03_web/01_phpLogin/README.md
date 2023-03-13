@@ -9,8 +9,87 @@
 - 想定必要スキル
     - Nginxの操作
 
-## PHP
-Hypertext Preprocessorの略。サーバサイドで動作するスクリプト言語の一つ。
+## 作成するサイトの要件
+
+
+## データベース追加
+MariaDB今回使用するDB、及びTableを作成する。
+
+また作成するuserテーブルは下記の通り。
+
+|カラム名|型|Not null|Primary key|
+|---|---|---|---|
+|id|int|○|○|
+|username|varchar(32)|○|-|
+|password|varchar(32)|-|-|
+|sessionid|varchar(40)|-|-|
+
+Mysqlサーバ接続クライアントを用いて、事前にDB/Table、及びテスト用データを作成する。
+
+```
+$ mysql -u root –p
+
+//データベースの作成
+MariaDB [(none)]> create user 'phptest'@'localhost';
+
+//データベースの作成
+MariaDB [(none)]> alter user 'phptest'@'localhost' identified by 'phptest';
+
+//データベースの作成
+MariaDB [(none)]> create  database phptest;
+
+//データベースのリスト表示
+MariaDB [none]> show databases;
+
+//データベースの権限作成
+grant INSERT,UPDATE,DELETE,SELECT on phptest.* to 'phptest'@'localhost';
+
+//データベースのフェッチ
+MariaDB [(none)]> use phptest
+
+//テーブルの作成（sessionidは後で追加）
+MariaDB [phptest]> create table user (
+    id int,
+    username varchar(32) not null,
+    password varchar(32),
+    primary key(id)
+);
+
+//テーブルのリスト表示
+MariaDB [phptest]> show tables;
+
+//カラムの表示
+MariaDB [phptest]> show column from user;
+
+//データの投入
+MariaDB [phptest]> insert into user (id, username, password) values (0, 'root', 'root');
+
+//投入したデータの表示
+MariaDB [phptest]> select * from user;
+
+//終了
+MariaDB [phptest]> quit;
+```
+
+**【追加学習】**
+
+次に上げる操作を実施するSQLコマンドを調べて、実行する。
+- 下記のユーザを新たに追加。
+    - user名：admin、password：admin
+    - user名：guest、password：guest
+
+    <details><summary>解答例</summary>
+    ```
+    insert into user (id, username, password) values (1, 'admin', 'admin');
+    insert into user (id, username, password) values (2, 'guest', 'guest');
+    ```
+    </details>
+
+- 現在phptestのuserテーブルには3つのカラム（id, username, password）しかない。新たに4つ目のsessionidカラムを追加。
+    <details><summary>解答例</summary>
+    - 既存のTableに追加する場合は、alterコマンドを使用。
+    </details>
+
 
 ## mysql拡張のインストール
 現状ではPHPファイルから、MariaDBへ接続するための拡張機能がインストールされていないため、はじめにインストールを行う。
@@ -206,7 +285,7 @@ CSSではどの要素を装飾するかを特定するために、セレクタ�
 
 ### MariaDBへの接続部分の作成
 
-全体は、[login.php](login.php)を参照。
+全体は、[login.php](login.php)を参照。（ここでは、その後のセキュアコーディング関係の内容を実施するため、あえて脆弱性のあるコーディングを実施している。）
 
 はじめにDBに接続するための情報を列挙。
 
@@ -321,6 +400,14 @@ http://localhost/login.php
 
 # セキュリティ
 ## SQLインジェクション
+上記のプログラムのUsername/Passwordの欄では、SQLインジェクションの脆弱性が存在する。例えば下記のクエリを送信することにより、
+
+```
+http://localhost/login.php?username=' or 1=1#&password=
+```
+
+**練習問題**
+sername/Password以外の箇所でSQLインジェクション
 
 ## クロスサイトスクリプティング
 
@@ -331,3 +418,5 @@ http://localhost/login.php
 ## ディレクトリリスティング
 
 ## 認証認可不備
+
+## 機密情報の不適切な管理
